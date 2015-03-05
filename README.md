@@ -97,3 +97,22 @@ pili_stream_context_release(ctx);
 ```
 
 **提示：** pili_write_video_packet 和 pili_write_audio_packet 两个方法是线程安全的。
+
+## 封包详解
+
+### MetaData 包
+TODO
+### VideoTag
+TODO
+### AudioTag
+TODO
+
+## 参考文献
+
+- [Video File Format Spec Version10](http://www.adobe.com/content/dam/Adobe/en/devnet/flv/pdfs/video_file_format_spec_v10.pdf)
+- [pili-camera-sdk-demo 源码](https://github.com/pili-io/pili-camera-sdk-demo)
+
+## 版本历史
+- 0.1.0
+	- clib 版本创建
+	- 实现 FLV 文件直推
