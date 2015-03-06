@@ -109,7 +109,7 @@ TODO
 
 ## 参考文献
 
-- [Video File Format Spec Version10](http://www.adobe.com/content/dam/Adobe/en/devnet/flv/pdfs/video_file_format_spec_v10.pdf)
+- [Adobe Flash Video File Format Specification Version 10.1](http://download.macromedia.com/f4v/video_file_format_spec_v10_1.pdf)
 - [pili-camera-sdk-demo 源码](https://github.com/pili-io/pili-camera-sdk-demo)
 
 ## 版本历史
