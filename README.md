@@ -100,12 +100,27 @@ pili_stream_context_release(ctx);
 
 ## 封包详解
 
+### Flv Tag Header
+
 ### MetaData 包
-TODO
+
+#### 第一个AMF包
+
+#### 第二个AMF包
+
+#### 第三个AFM包
+
 ### VideoTag
-TODO
+
+#### 第一个Video Tag
+
+#### 后续Video Tag
+
 ### AudioTag
-TODO
+
+#### 第一个Audio Tag
+
+#### 后续Audio Tag
 
 ## 参考文献
 
