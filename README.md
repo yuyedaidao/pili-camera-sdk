@@ -96,20 +96,193 @@ pili_stream_push_close(ctx);
 pili_stream_context_release(ctx);
 ```
 
-**提示：** pili_write_video_packet 和 pili_write_audio_packet 两个方法是线程安全的。
+**提示：** `pili_write_video_packet` 和 `pili_write_audio_packet` 两个方法是线程安全的。
 
 ## 封包详解
 
+sdk对外结构中结构体`pili_video_packet`中的`video_tag`, `pili_audio_tag`中的`audio_tag`都是与一个flv标准封装中的一个`flv tag`的`tag data`部分是一致的.
+
 ### MetaData 包
-TODO
+
+#### 第一个AMF包
+
+```
+| 02 | 00 | 0D | @ | s | e | t | D | a | t | a | F | r | a | m | e |
+```
+
+#### 第二个AMF包
+
+```
+| 02 | 00 | 0A | o | n | M | e | t | a | D | a | t | a |
+```
+
+#### 第三个AMF包
+
+```
+| 08 | 00 | 00 | 00 | 0C |
+```
+
+Metadata元素个数暂定为12个 = 音频5个 + 视频5个 + 2个(duration和filesize). metadata元素的顺序不固定, 此处采用ffmpeg中的顺序.
+
+duration(19 bytes)
+
+```
+| 00 | 08 | d | u | r | a | t | i | o | n | 00 |  |  |  |  |  |  |  |  |
+```
+
+width(16 bytes)
+
+```
+| 00 | 05 | w | i | d | t | h | 00 |  |  |  |  |  |  |  |  |
+```
+
+height(17 bytes)
+
+```
+| 00 | 06 | h | e | i | g | h | t | 00 |  |  |  |  |  |  |  |  |
+```
+
+videodatarate(24 bytes)
+
+```
+| 00 | 0D | v | i | d | e | o | d | a | t | a | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+framerate(20 bytes)
+
+```
+| 00 | 09 | f | r | a | m | e | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+videocodecid(23 bytes)
+
+```
+| 00 | 0C | v | i | d | e | o | c | o | d | e | c | i | d | 00 |  |  |  |  |  |  |  |  |
+```
+
+audiodatarate(24 bytes)
+
+```
+| 00 | 0D | a | u | d | i | o | d | a | t | a | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+audiosamplerate(26 bytes)
+
+```
+| 00 | 0F | a | u | d | i | o | s | a | m | p | l | e | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+audiosamplesize(26 bytes)
+
+```
+| 00 | 0F | a | u | d | i | o | s | a | m | p | l | e | s | i | z | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+stereo(10 bytes)
+
+```
+| 00 | 06 | s | t | e | r | e | o | 01 | 00/01 |
+```
+
+audiocodecid(23 bytes)
+
+```
+| 00 | 0C | a | u | d | i | o | c | o | d | e | c | i | d | 00 |  |  |  |  |  |  |  |  |
+```
+
+major_brand
+
+```
+| 00 | 0B | m | a | j | o | r | _ | b | r | a | n | d | 02 | 00 | 04 | d | b | y | `1` |
+```
+
+minor_version
+
+```
+| 00 | 0D | m | i | n | o | r | _ | v | e | r | s | i | o | n | 02 | 00 | 01 | 00 |
+```
+
+compatible_brands
+
+```
+| 00| 11 | c | o | m | p | a | t | i | b | l | e | _ | b | r | a | n | d | s | 
+```
+
+```
+| 02 | 00 | 0C | i | s | o | m | m | p | 4 | 2 | d | b | y | `1` |
+```
+
+encoder
+
+```
+| 00 | 07 | e | n | c | o | d | e | r | 02 | 00 | 0C | L | a | v | f | 5 | 5 | . | 9 | . | 1 | 0 | 0 |
+```
+
+filesize
+
+```
+| 00 | 08 | f | i | l | e | s | i | z | e | 00 |  |  |  |  |  |  |  |  | 00 | 00 | 09 |
+```
+
 ### VideoTag
-TODO
+
+#### 第一个Video Tag
+
+```
+| 17 | 00 | 00 | 00 | 00 |
+```
+
+```
+| 01 | sps[1] | sps[2] | sps[3] | FF |
+```
+
+sps[1]: Profile
+sps[2]: Profile Compact
+sps[3]: Level
+
+```
+| E1 |  |  | --- SPS --- | 01 |  |  | --- PPS --- |
+      SPS Size                 PPS Size
+```
+
+E1: (Reserved << 5) | Number_Of_SPS = (0x07 << 5) | 0x01 = 0xE1
+
+#### 后续普通的Video Tag
+
+```
+| 17/27 | 01 | 00 | 00 | 00 |  |  |  |  | ... ... |
+                             NALU Length NALU Data
+```
+
 ### AudioTag
-TODO
+
+#### 第一个Audio Tag
+
+```
+| AF | 00 | 12 | 30 | 56 | E5 | 00 |
+            AudioSpecificConfig
+```
+AF: (SoundFormat << 4) | (SoundRate << 2) | (SoundSize << 1) | SoundType + (0x0A << 4) | (0x03 << 2) | (0x01 << 1) | 0x01 = 0xAF
+
+AudioSpecificConfig: 
+Object Type(5 bits): 2-AAC-LC, 5-SBR, 29-PS
+Samplerate Index(4 bits): 0-9600, 1-88200, 3-64000, 4-44100, 5-32000, 6-24000, 7-22050, 8-16000.
+Channels(4 bits): 1-单声道, 2-双声道
+Frame Length Flag(1 bit): 0 - 1024 samples
+Depend On Core Coder(1 bit): 0 - 不依赖, 1 - 依赖
+Extension Flag(1 bit): 0 - Is not extension 1 - Is extension
+
+#### 后续普通的Audio Tag
+
+```
+| AF | 01 | ... ... |
+            AAC Data
+```
+AF: (SoundFormat << 4) | (SoundRate << 2) | (SoundSize << 1) | SoundType = 0x0A << 4) | (0x03 << 2) | (0x01 << 1) | 0x01 = 0xAF
 
 ## 参考文献
 
-- [Video File Format Spec Version10](http://www.adobe.com/content/dam/Adobe/en/devnet/flv/pdfs/video_file_format_spec_v10.pdf)
+- [Adobe Flash Video File Format Specification Version 10.1](http://download.macromedia.com/f4v/video_file_format_spec_v10_1.pdf)
 - [pili-camera-sdk-demo 源码](https://github.com/pili-io/pili-camera-sdk-demo)
 
 ## 版本历史
