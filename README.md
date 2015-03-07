@@ -96,19 +96,133 @@ pili_stream_push_close(ctx);
 pili_stream_context_release(ctx);
 ```
 
-**提示：** pili_write_video_packet 和 pili_write_audio_packet 两个方法是线程安全的。
+**提示：** `pili_write_video_packet` 和 `pili_write_audio_packet` 两个方法是线程安全的。
 
 ## 封包详解
 
-### Flv Tag Header
+sdk对外结构中结构体`pili_video_packet`中的`video_tag`, `pili_audio_tag`中的`audio_tag`都是与一个flv标准封装中的一个`flv tag`的`tag data`部分是一致的.
 
 ### MetaData 包
 
 #### 第一个AMF包
 
+```
+| 02 | 00 | 0D | @ | s | e | t | D | a | t | a | F | r | a | m | e |
+```
+
 #### 第二个AMF包
 
-#### 第三个AFM包
+```
+| 02 | 00 | 0A | o | n | M | e | t | a | D | a | t | a |
+```
+
+#### 第三个AMF包
+
+```
+| 08 | 00 | 00 | 00 | 0C |
+```
+
+Metadata元素个数暂定为12个 = 音频5个 + 视频5个 + 2个(duration和filesize). metadata元素的顺序不固定, 此处采用ffmpeg中的顺序.
+
+duration(19 bytes)
+
+```
+| 00 | 08 | d | u | r | a | t | i | o | n | 00 |  |  |  |  |  |  |  |  |
+```
+
+width(16 bytes)
+
+```
+| 00 | 05 | w | i | d | t | h | 00 |  |  |  |  |  |  |  |  |
+```
+
+height(17 bytes)
+
+```
+| 00 | 06 | h | e | i | g | h | t | 00 |  |  |  |  |  |  |  |  |
+```
+
+videodatarate(24 bytes)
+
+```
+| 00 | 0D | v | i | d | e | o | d | a | t | a | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+framerate(20 bytes)
+
+```
+| 00 | 09 | f | r | a | m | e | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+videocodecid(23 bytes)
+
+```
+| 00 | 0C | v | i | d | e | o | c | o | d | e | c | i | d | 00 |  |  |  |  |  |  |  |  |
+```
+
+audiodatarate(24 bytes)
+
+```
+| 00 | 0D | a | u | d | i | o | d | a | t | a | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+audiosamplerate(26 bytes)
+
+```
+| 00 | 0F | a | u | d | i | o | s | a | m | p | l | e | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+audiosamplesize(26 bytes)
+
+```
+| 00 | 0F | a | u | d | i | o | s | a | m | p | l | e | s | i | z | e | 00 |  |  |  |  |  |  |  |  |
+```
+
+stereo(10 bytes)
+
+```
+| 00 | 06 | s | t | e | r | e | o | 01 | 00/01 |
+```
+
+audiocodecid(23 bytes)
+
+```
+| 00 | 0C | a | u | d | i | o | c | o | d | e | c | i | d | 00 |  |  |  |  |  |  |  |  |
+```
+
+major_brand
+
+```
+| 00 | 0B | m | a | j | o | r | _ | b | r | a | n | d | 02 | 00 | 04 | d | b | y | `1` |
+```
+
+minor_version
+
+```
+| 00 | 0D | m | i | n | o | r | _ | v | e | r | s | i | o | n | 02 | 00 | 01 | 00 |
+```
+
+compatible_brands
+
+```
+| 00| 11 | c | o | m | p | a | t | i | b | l | e | _ | b | r | a | n | d | s | 
+```
+
+```
+| 02 | 00 | 0C | i | s | o | m | m | p | 4 | 2 | d | b | y | `1` |
+```
+
+encoder
+
+```
+| 00 | 07 | e | n | c | o | d | e | r | 02 | 00 | 0C | L | a | v | f | 5 | 5 | . | 9 | . | 1 | 0 | 0 |
+```
+
+filesize
+
+```
+| 00 | 08 | f | i | l | e | s | i | z | e | 00 |  |  |  |  |  |  |  |  | 00 | 00 | 09 |
+```
 
 ### VideoTag
 
