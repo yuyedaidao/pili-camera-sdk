@@ -228,13 +228,57 @@ filesize
 
 #### 第一个Video Tag
 
-#### 后续Video Tag
+```
+| 17 | 00 | 00 | 00 | 00 |
+```
+
+```
+| 01 | sps[1] | sps[2] | sps[3] | FF |
+```
+
+sps[1]: Profile
+sps[2]: Profile Compact
+sps[3]: Level
+
+```
+| E1 |  |  | --- SPS --- | 01 |  |  | --- PPS --- |
+      SPS Size                 PPS Size
+```
+
+E1: (Reserved << 5) | Number_Of_SPS = (0x07 << 5) | 0x01 = 0xE1
+
+#### 后续普通的Video Tag
+
+```
+| 17/27 | 01 | 00 | 00 | 00 |  |  |  |  | ... ... |
+                             NALU Length NALU Data
+```
 
 ### AudioTag
 
 #### 第一个Audio Tag
 
-#### 后续Audio Tag
+```
+| AF | 00 | 12 | 30 | 56 | E5 | 00 |
+            AudioSpecificConfig
+```
+AF: (SoundFormat << 4) | (SoundRate << 2) | (SoundSize << 1) | SoundType + (0x0A << 4) | (0x03 << 2) | (0x01 << 1) | 0x01 = 0xAF
+
+AudioSpecificConfig: 
+Object Type(5 bits): 2-AAC-LC, 5-SBR, 29-PS
+Samplerate Index(4 bits): 0-9600, 1-88200, 3-64000, 4-44100, 5-32000, 6-24000, 7-22050, 8-16000.
+Channels(4 bits): 1-单声道, 2-双声道
+Frame Length Flag(1 bit): 0 - 1024 samples
+Depend On Core Coder(1 bit): 0 - 不依赖, 1 - 依赖
+Extension Flag(1 bit): 0 - Is not extension 1 - Is extension
+
+#### 后续普通的Audio Tag
+
+```
+| AF | 01 | ... ... |
+            AAC Data
+```
+AF: (SoundFormat << 4) | (SoundRate << 2) | (SoundSize << 1) | SoundType = 0x0A << 4) | (0x03 << 2) | (0x01 << 1) | 0x01 = 0xAF
 
 ## 参考文献
 
