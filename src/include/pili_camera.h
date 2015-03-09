@@ -3,7 +3,7 @@
 //  camera-sdk
 //
 //  Created by 0day on 15/2/6.
-//  Copyright (c) 2015年 qgenius. All rights reserved.
+//  Copyright (c) 2015年 Pili Engineering. All rights reserved.
 //
 
 #ifndef camera_sdk_pili_camera_h
