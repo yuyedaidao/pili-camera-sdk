@@ -1,0 +1,10 @@
+{
+  "name": "pili-camera-sdk",
+  "version": "0.1.0",
+  "repo": "pili-io/pili-camera-sdk",
+  "license": "Apache 2.0",
+  "src":[
+    "src/include/*",
+    "src/libpili_push.a"
+  ]
+}
