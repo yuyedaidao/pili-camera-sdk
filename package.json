@@ -4,7 +4,11 @@
   "repo": "pili-io/pili-camera-sdk",
   "license": "Apache 2.0",
   "src":[
-    "src/include/*",
+    "src/include/data_defines.h",
+    "src/include/flv_mux.h",
+    "src/include/pili_auth.h",
+    "src/include/pili_camera.h",
+    "src/include/push.h",
     "src/libpili_push.a"
   ]
 }
