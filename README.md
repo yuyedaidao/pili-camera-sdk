@@ -88,19 +88,19 @@ SDK 对外结构中结构体 `pili_video_packet` 中的 `video_tag` 与 `pili_au
 
 ### MetaData 包
 
-#### 第一个AMF包
+#### 第一个 AMF 包
 
 ```
 | 02 | 00 | 0D | @ | s | e | t | D | a | t | a | F | r | a | m | e |
 ```
 
-#### 第二个AMF包
+#### 第二个 AMF 包
 
 ```
 | 02 | 00 | 0A | o | n | M | e | t | a | D | a | t | a |
 ```
 
-#### 第三个AMF包
+#### 第三个 AMF 包
 
 ```
 | 08 | 00 | 00 | 00 | 0C |
@@ -249,11 +249,17 @@ E1: (Reserved << 5) | Number_Of_SPS = (0x07 << 5) | 0x01 = 0xE1
 AF: (SoundFormat << 4) | (SoundRate << 2) | (SoundSize << 1) | SoundType + (0x0A << 4) | (0x03 << 2) | (0x01 << 1) | 0x01 = 0xAF
 
 AudioSpecificConfig: 
+
 Object Type(5 bits): 2-AAC-LC, 5-SBR, 29-PS
+
 Samplerate Index(4 bits): 0-9600, 1-88200, 3-64000, 4-44100, 5-32000, 6-24000, 7-22050, 8-16000.
+
 Channels(4 bits): 1-单声道, 2-双声道
+
 Frame Length Flag(1 bit): 0 - 1024 samples
+
 Depend On Core Coder(1 bit): 0 - 不依赖, 1 - 依赖
+
 Extension Flag(1 bit): 0 - Is not extension 1 - Is extension
 
 #### 后续普通的 Audio Tag
