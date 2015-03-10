@@ -84,7 +84,7 @@ pili_stream_context_release(ctx);
 
 ## 封包详解
 
-sdk对外结构中结构体`pili_video_packet`中的`video_tag`, `pili_audio_tag`中的`audio_tag`都是与一个flv标准封装中的一个`flv tag`的`tag data`部分是一致的.
+SDK 对外结构中结构体 `pili_video_packet` 中的 `video_tag` 与 `pili_audio_tag` 中的`audio_tag`都是与一个 flv 标准封装中的一个 `flv tag` 的 `tag data` 部分是一致的.
 
 ### MetaData 包
 
@@ -106,69 +106,69 @@ sdk对外结构中结构体`pili_video_packet`中的`video_tag`, `pili_audio_tag
 | 08 | 00 | 00 | 00 | 0C |
 ```
 
-Metadata元素个数暂定为12个 = 音频5个 + 视频5个 + 2个(duration和filesize). metadata元素的顺序不固定, 此处采用ffmpeg中的顺序.
+Metadata 元素个数暂定为 12 个 = 音频 5 个 + 视频 5 个 + 2 个 (duration 和 filesize). Metadata 元素的顺序不固定, 此处采用 ffmpeg 中的顺序.
 
-duration(19 bytes)
+duration (19 bytes)
 
 ```
 | 00 | 08 | d | u | r | a | t | i | o | n | 00 |  |  |  |  |  |  |  |  |
 ```
 
-width(16 bytes)
+width (16 bytes)
 
 ```
 | 00 | 05 | w | i | d | t | h | 00 |  |  |  |  |  |  |  |  |
 ```
 
-height(17 bytes)
+height (17 bytes)
 
 ```
 | 00 | 06 | h | e | i | g | h | t | 00 |  |  |  |  |  |  |  |  |
 ```
 
-videodatarate(24 bytes)
+videodatarate (24 bytes)
 
 ```
 | 00 | 0D | v | i | d | e | o | d | a | t | a | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
 ```
 
-framerate(20 bytes)
+framerate (20 bytes)
 
 ```
 | 00 | 09 | f | r | a | m | e | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
 ```
 
-videocodecid(23 bytes)
+videocodecid (23 bytes)
 
 ```
 | 00 | 0C | v | i | d | e | o | c | o | d | e | c | i | d | 00 |  |  |  |  |  |  |  |  |
 ```
 
-audiodatarate(24 bytes)
+audiodatarate (24 bytes)
 
 ```
 | 00 | 0D | a | u | d | i | o | d | a | t | a | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
 ```
 
-audiosamplerate(26 bytes)
+audiosamplerate (26 bytes)
 
 ```
 | 00 | 0F | a | u | d | i | o | s | a | m | p | l | e | r | a | t | e | 00 |  |  |  |  |  |  |  |  |
 ```
 
-audiosamplesize(26 bytes)
+audiosamplesize (26 bytes)
 
 ```
 | 00 | 0F | a | u | d | i | o | s | a | m | p | l | e | s | i | z | e | 00 |  |  |  |  |  |  |  |  |
 ```
 
-stereo(10 bytes)
+stereo (10 bytes)
 
 ```
 | 00 | 06 | s | t | e | r | e | o | 01 | 00/01 |
 ```
 
-audiocodecid(23 bytes)
+audiocodecid (23 bytes)
 
 ```
 | 00 | 0C | a | u | d | i | o | c | o | d | e | c | i | d | 00 |  |  |  |  |  |  |  |  |
@@ -210,7 +210,7 @@ filesize
 
 ### VideoTag
 
-#### 第一个Video Tag
+#### 第一个 Video Tag
 
 ```
 | 17 | 00 | 00 | 00 | 00 |
@@ -231,7 +231,7 @@ sps[3]: Level
 
 E1: (Reserved << 5) | Number_Of_SPS = (0x07 << 5) | 0x01 = 0xE1
 
-#### 后续普通的Video Tag
+#### 后续普通的 Video Tag
 
 ```
 | 17/27 | 01 | 00 | 00 | 00 |  |  |  |  | ... ... |
@@ -240,7 +240,7 @@ E1: (Reserved << 5) | Number_Of_SPS = (0x07 << 5) | 0x01 = 0xE1
 
 ### AudioTag
 
-#### 第一个Audio Tag
+#### 第一个 Audio Tag
 
 ```
 | AF | 00 | 12 | 30 | 56 | E5 | 00 |
@@ -256,7 +256,7 @@ Frame Length Flag(1 bit): 0 - 1024 samples
 Depend On Core Coder(1 bit): 0 - 不依赖, 1 - 依赖
 Extension Flag(1 bit): 0 - Is not extension 1 - Is extension
 
-#### 后续普通的Audio Tag
+#### 后续普通的 Audio Tag
 
 ```
 | AF | 01 | ... ... |
@@ -271,5 +271,4 @@ AF: (SoundFormat << 4) | (SoundRate << 2) | (SoundSize << 1) | SoundType = 0x0A 
 
 ## 版本历史
 - 0.1.0
-	- clib 版本创建
 	- 实现 FLV 文件直推
