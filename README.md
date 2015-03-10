@@ -7,34 +7,18 @@ pili-camera-sdk 是 **pili 流媒体云服务** 开发团队为 IPCamera 量身�
 
 ### 下载配置 SDK
 
-pili-camera-sdk 提供了两种配置方式供开发者选择：
-
-- clib 安装 [推荐]
-- 手动安装
-
-#### clib 安装
-
-```
-# no more than 1 step
-clib install pili-camera-sdk
-```
-
-你只需要这一句就搞定了，可以开始使用 sdk 了。
-
-#### 手动安装
-
 ```
 # step 1
 git clone https://github.com/pili-io/pili-camera-sdk.git
 
 # step 2
-添加头文件 search path
+添加头文件 include path
 
 # step 3
-添加 lib search path
+添加 lib link path
 ```
 
-推荐使用 clib 方式管理 pili-camera-sdk，减少不必要的依赖管理不仅轻松而且更 cool。
+如果你使用 cmake 编译项目，可以参考 [demo 项目](https://github.com/pili-io/pili-camera-sdk-demo) 的 CMakeFile
 
 ### 示例代码
 
