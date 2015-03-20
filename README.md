@@ -82,6 +82,12 @@ pili_stream_context_release(ctx);
 
 **提示：** `pili_write_video_packet` 和 `pili_write_audio_packet` 两个方法是线程安全的。
 
+## 依赖库
+
+- libz
+- libssl
+- libcrypto
+
 ## 封包详解
 
 SDK 对外结构中结构体 `pili_video_packet` 中的 `video_tag` 与 `pili_audio_tag` 中的`audio_tag`都是与一个 flv 标准封装中的一个 `flv tag` 的 `tag data` 部分是一致的.
