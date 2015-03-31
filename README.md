@@ -276,6 +276,14 @@ Extension Flag(1 bit): 0 - Is not extension 1 - Is extension
 ```
 AF: (SoundFormat << 4) | (SoundRate << 2) | (SoundSize << 1) | SoundType = 0x0A << 4) | (0x03 << 2) | (0x01 << 1) | 0x01 = 0xAF
 
+## 功能特性
+
+- 多种丢帧策略选择
+	- [x] 随机丢帧
+	- 视频关键帧连带丢帧 (Coming soon)
+- [x] 网络队列支持
+- [x] 低内存占用优化
+
 ## 参考文献
 
 - [Adobe Flash Video File Format Specification Version 10.1](http://download.macromedia.com/f4v/video_file_format_spec_v10_1.pdf)
