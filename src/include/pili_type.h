@@ -22,6 +22,12 @@ PILI_TYPE_POINTER(struct pili_packet_queue, pili_packet_queue_p);
 PILI_TYPE(struct pili_stream_context, pili_stream_context_t);
 PILI_TYPE_POINTER(struct pili_stream_context, pili_stream_context_p);
 
+PILI_TYPE(struct pili_h264_nalu, pili_h264_nalu_t);
+PILI_TYPE_POINTER(struct pili_h264_nalu, pili_h264_nalu_p);
+
+PILI_TYPE(struct pili_h264_key_frame, pili_h264_key_frame_t);
+PILI_TYPE_POINTER(struct pili_h264_key_frame, pili_h264_key_frame_p);
+
 #define PILI_STREAM_STATE_UNKNOW        0x00
 #define PILI_STREAM_STATE_CONNECTING    0x01
 #define PILI_STREAM_STATE_CONNECTED     0x02
@@ -30,6 +36,9 @@ PILI_TYPE_POINTER(struct pili_stream_context, pili_stream_context_p);
 
 typedef void (*pili_stream_state_cb)(uint8_t state);
 
+/**
+ * stream context
+ */
 pili_stream_context_p pili_create_stream_context();
 int pili_init_stream_context(pili_stream_context_p ctx,
                              uint8_t drop_frame_policy,
@@ -44,6 +53,21 @@ struct pili_stream_context {
     uint8_t                 drop_frame_policy;
     uint32_t                buffer_time_interval;
     pili_stream_state_cb    stream_state_cb;
+};
+
+/**
+ * h264
+ */
+struct pili_h264_nalu {
+    uint8_t *data;
+    size_t  length;
+};
+
+struct pili_h264_key_frame {
+    pili_h264_nalu_t sps;
+    pili_h264_nalu_t pps;
+    pili_h264_nalu_t sei;
+    pili_h264_nalu_t idr;
 };
 
 #endif  // __PILI_CAMERA_SDK__TYPE__

@@ -10,6 +10,7 @@
 #define __PILI_CAMERA_SDK__FLV__
 
 #include <stdlib.h>
+#include <stdint.h>
 #include "pili_macro.h"
 
 /**
@@ -33,6 +34,30 @@ struct flv_tag {
     void        *data;  // 指向 flv_audio_data_p 或 flv_video_data_p
 };
 
+/**
+ * AMF 声明
+ */
+enum {
+    kAMFNumber = 0,
+    kAMFBoolean,
+    kAMFString,
+    kAMFObject,
+    kAMFMovieClip,		/* reserved, not used */
+    kAMFNull,
+    kAMFUndefined,
+    kAMFReference,
+    kAMFEMCAArray,
+    kAMFObjectEnd,
+    kAMFStrictArray,
+    kAMFDate,
+    kAMFLongString,
+    kAMFUnsupported,
+    kAMFRecordSet,		/* reserved, not used */
+    kAMFXmlDoc,
+    kAMFTypedObject,
+    kAMFAvmPlus,		/* switch to AMF3 */
+    kAMFInvalid = 0xff
+};
 
 // ---------------- Audio tag -------------------
 /**
